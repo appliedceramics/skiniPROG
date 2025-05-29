@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  skiniprog:
+    build: .
+    ports:
+      - "80:80"
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - uploads_data:/app/uploads
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgresql://skiniprog:skiniprog123@localhost:5432/skiniprog
+      - PGHOST=localhost
+      - PGPORT=5432
+      - PGUSER=skiniprog
+      - PGPASSWORD=skiniprog123
+      - PGDATABASE=skiniprog
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  postgres_data:
+    driver: local
+  uploads_data:
+    driver: local
